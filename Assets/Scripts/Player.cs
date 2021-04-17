@@ -1,5 +1,3 @@
-using System;
-using System.Collections.Generic;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -18,10 +16,12 @@ public class Player : MonoBehaviour
     private LayerMask groundLayers;
 
     private Rigidbody2D body;
+    private Vector2 velocity;
     private float direction;
     private bool grounded;
-    
+
     private const float GroundDetectionRadius = 0.2f;
+    private const float MoveSmoothing = 0.05f;
 
     private void Awake()
     {
@@ -31,7 +31,9 @@ public class Player : MonoBehaviour
     private void FixedUpdate()
     {
         // set speed according to current direction
-        body.velocity = new Vector2(direction * moveSpeed, body.velocity.y);
+        var current = body.velocity;
+        var target = new Vector2(direction * moveSpeed, current.y);
+        body.velocity = Vector2.SmoothDamp(current, target, ref velocity, MoveSmoothing);
 
         // check whether the player touches the ground
         grounded = Physics2D.OverlapCircle(groundLevel.position, GroundDetectionRadius, groundLayers);
