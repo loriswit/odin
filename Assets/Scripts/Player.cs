@@ -9,13 +9,23 @@ public class Player : MonoBehaviour
     [SerializeField]
     private float moveSpeed = 10;
 
+    [Header("Ground Detection")]
     [SerializeField]
     private Transform groundLevel;
 
     [SerializeField]
     private LayerMask groundLayers;
 
+    [Header("Collider Material")]
+    [SerializeField]
+    private PhysicsMaterial2D groundedMaterial;
+
+    [SerializeField]
+    private PhysicsMaterial2D midairMaterial;
+
     private Rigidbody2D body;
+    private new CapsuleCollider2D collider;
+
     private Vector2 velocity;
     private float direction;
     private bool grounded;
@@ -26,6 +36,7 @@ public class Player : MonoBehaviour
     private void Awake()
     {
         body = GetComponent<Rigidbody2D>();
+        collider = GetComponent<CapsuleCollider2D>();
     }
 
     private void FixedUpdate()
@@ -37,6 +48,7 @@ public class Player : MonoBehaviour
 
         // check whether the player touches the ground
         grounded = Physics2D.OverlapCircle(groundLevel.position, GroundDetectionRadius, groundLayers);
+        collider.sharedMaterial = grounded ? groundedMaterial : midairMaterial;
     }
 
     private void OnJump()
