@@ -1,4 +1,3 @@
-using System;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
@@ -14,6 +13,13 @@ public class Player : MonoBehaviour
     [Range(0f, 90f)]
     [SerializeField]
     private float maxGroundAngle = 45;
+
+    [Header("Physics materials")]
+    [SerializeField]
+    private PhysicsMaterial2D lowFriction;
+
+    [SerializeField]
+    private PhysicsMaterial2D highFriction;
 
     private Rigidbody2D body;
 
@@ -46,6 +52,8 @@ public class Player : MonoBehaviour
         // disable default gravity
         gravityScale = body.gravityScale;
         body.gravityScale = 0;
+
+        body.sharedMaterial = lowFriction;
     }
 
     /**
@@ -95,37 +103,71 @@ public class Player : MonoBehaviour
     {
         // update move direction (-1 = left, 1 = right, 0 = idle)
         direction = value.Get<float>();
+
+        // remove friction when moving
+        if (direction != 0)
+            body.sharedMaterial = lowFriction;
+    }
+
+    private void OnCollisionEnter2D(Collision2D collision)
+    {
+        var wasGrounded = Grounded;
+
+        // check if colliding with ground
+        CheckGround(collision);
+
+        // increase friction when landing without moving
+        // prevents sliding on slope when landing
+        if (!wasGrounded && Grounded && direction == 0)
+            body.sharedMaterial = highFriction;
     }
 
     private void OnCollisionStay2D(Collision2D collision)
     {
-        // check if colliding with ground
-        if (!Grounded || Grounded && collision.gameObject == ground)
-        {
-            ground = null;
-            groundNormal = Vector2.zero;
+        // check if still colliding with ground
+        // contact points and angles may have changed
+        CheckGround(collision);
 
-            foreach (var contact in collision.contacts)
-            {
-                var angle = Vector2.Angle(Vector2.up, contact.normal);
-                if (angle > maxGroundAngle) continue;
-
-                ground = collision.gameObject;
-                groundNormal = -contact.normal;
-                break;
-            }
-        }
-
-        // draw contact points
-        foreach (var contact in collision.contacts)
-            Debug.DrawRay(contact.point, contact.normal,
-                Color.HSVToRGB(Math.Abs(collision.collider.GetInstanceID()) * 0.37f % 1f, 1, 1));
+        // remove friction if not grounded anymore
+        if (!Grounded)
+            body.sharedMaterial = lowFriction;
     }
 
     private void OnCollisionExit2D(Collision2D collision)
     {
-        // leave ground
+        // leave current ground
         if (Grounded && collision.gameObject == ground)
+        {
             ground = null;
+            groundNormal = Vector2.zero;
+        }
+    }
+
+    private void CheckGround(Collision2D collision)
+    {
+        // reset if current ground
+        if (collision.gameObject == ground)
+        {
+            ground = null;
+            groundNormal = Vector2.zero;
+        }
+
+        foreach (var contact in collision.contacts)
+        {
+            // check if slope isn't too steep
+            if (Vector2.Angle(Vector2.up, contact.normal) <= maxGroundAngle)
+            {
+                if (!Grounded)
+                {
+                    ground = collision.gameObject;
+                    groundNormal = -contact.normal;
+                }
+
+                Debug.DrawRay(contact.point, contact.normal,
+                    body.sharedMaterial == highFriction ? Color.blue : Color.green);
+            }
+            else
+                Debug.DrawRay(contact.point, contact.normal, Color.red);
+        }
     }
 }
