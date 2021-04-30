@@ -99,8 +99,9 @@ GameObject:
   - component: {fileID: 3472300773997563548}
   - component: {fileID: 3472300773997563546}
   - component: {fileID: 3472300773997563545}
-  - component: {fileID: 3472300773997563544}
   - component: {fileID: 3472300773997563543}
+  - component: {fileID: 5730812446419870140}
+  - component: {fileID: 6516110399653908372}
   m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
@@ -212,23 +213,6 @@ Rigidbody2D:
   m_SleepingMode: 1
   m_CollisionDetection: 1
   m_Constraints: 4
---- !u!114 &3472300773997563544
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 3472300773997563549}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: b5f5c688b462d5349b405bf5d93430f9, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  jumpSpeed: 12
-  moveSpeed: 6
-  maxGroundAngle: 45
-  lowFriction: {fileID: 6200000, guid: e82b7ee4c5e6e5c4099eeba33c66b361, type: 2}
-  highFriction: {fileID: 6200000, guid: 342ce35e0f448f349b1b153d634b62ff, type: 2}
 --- !u!114 &3472300773997563543
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -267,6 +251,35 @@ MonoBehaviour:
   m_DefaultActionMap: Player
   m_SplitScreenIndex: -1
   m_Camera: {fileID: 0}
+--- !u!114 &5730812446419870140
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3472300773997563549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: a880e359011f4f149873f49bfe8f7bc4, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+--- !u!114 &6516110399653908372
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3472300773997563549}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e5b9b55a5ab5bec4293d9cc85e337822, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  jumpSpeed: 12
+  moveSpeed: 6
+  maxGroundAngle: 45
+  lowFriction: {fileID: 6200000, guid: e82b7ee4c5e6e5c4099eeba33c66b361, type: 2}
+  highFriction: {fileID: 6200000, guid: 342ce35e0f448f349b1b153d634b62ff, type: 2}
 --- !u!1 &3472300774477525774
 GameObject:
   m_ObjectHideFlags: 0
