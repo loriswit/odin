@@ -4,12 +4,15 @@ namespace Characters
 {
     public class Character : MonoBehaviour
     {
-        [Header("Character Velocity")]
+        [Header("Character Stats")]
         [SerializeField]
         private float jumpSpeed = 20;
 
         [SerializeField]
         private float moveSpeed = 10;
+
+        [SerializeField]
+        private float health = 100;
 
         [Header("Ground Detection")]
         [Range(0f, 90f)]
@@ -29,12 +32,14 @@ namespace Characters
         private Vector2 velocity;
         private Direction direction;
         private float jumpCooldown;
+        private float hurtCooldown;
 
         private GameObject ground;
         private Vector2 groundNormal;
 
         private const float MoveSmoothing = 0.05f;
         private const float JumpDelay = 0.1f;
+        private const float HurtDelay = 0.5f;
 
         /**
          * True whenever the player is on the ground.
@@ -87,18 +92,38 @@ namespace Characters
             direction = Direction.Idle;
         }
 
+        public void Hurt(GameObject source, float damage)
+        {
+            if (hurtCooldown > 0) return;
+
+            health -= damage;
+            hurtCooldown = HurtDelay;
+
+            // make the character bump
+            var hitDirection = (transform.position - source.transform.position).normalized;
+            body.velocity = hitDirection * 10 + new Vector3(0, 10, 0);
+
+            // kill the character
+            if (health < 0)
+                Destroy(gameObject);
+        }
+
         private void FixedUpdate()
         {
-            // decrease cooldown
+            // decrease cooldowns
             jumpCooldown -= Time.fixedDeltaTime;
+            hurtCooldown -= Time.fixedDeltaTime;
 
             Vector2 targetVelocity;
             Vector2 gravity;
 
+            // prevent moving when receiving damage
+            var speed = hurtCooldown > 0 ? 0 : (float) direction * moveSpeed;
+
             // when mid-air, move horizontally and use default gravity
             if (MidAir)
             {
-                targetVelocity = new Vector2((int) direction * moveSpeed, body.velocity.y);
+                targetVelocity = new Vector2(speed, body.velocity.y);
                 gravity = Physics.gravity;
             }
 
@@ -106,7 +131,7 @@ namespace Characters
             // this makes walking on slopes more smooth, as if the ground was always horizontal
             else
             {
-                targetVelocity = Vector2.Perpendicular(groundNormal) * ((int) direction * moveSpeed);
+                targetVelocity = Vector2.Perpendicular(groundNormal) * speed;
                 gravity = groundNormal * Physics.gravity.magnitude;
             }
 
