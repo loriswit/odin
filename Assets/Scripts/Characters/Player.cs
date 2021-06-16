@@ -15,9 +15,13 @@ namespace Characters
 
         private Character character;
 
+        private Animator animator;
+        private static readonly int Attack = Animator.StringToHash("attack");
+
         private void Awake()
         {
             character = GetComponent<Character>();
+            animator = GetComponentInChildren<Animator>();
         }
 
         private void OnJump()
@@ -27,6 +31,8 @@ namespace Characters
 
         private void OnAttack()
         {
+            animator.SetTrigger(Attack);
+
             var filter = new ContactFilter2D
             {
                 layerMask = LayerMask.GetMask("Hurtbox"),
@@ -54,7 +60,7 @@ namespace Characters
             else
                 character.StopMoving();
 
-            // flip hitbox
+            // if moving
             if (input != 0)
                 hitbox.transform.localScale = new Vector2(input, 1);
         }

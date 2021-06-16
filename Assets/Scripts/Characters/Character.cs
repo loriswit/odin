@@ -26,6 +26,10 @@ namespace Characters
         [SerializeField]
         private PhysicsMaterial2D highFriction;
 
+        [Header("Graphics")]
+        [SerializeField]
+        private GameObject sprite;
+
         private Rigidbody2D body;
 
         private float gravityScale;
@@ -40,6 +44,12 @@ namespace Characters
         private const float MoveSmoothing = 0.05f;
         private const float JumpDelay = 0.1f;
         private const float HurtDelay = 0.5f;
+
+        private Animator animator;
+        private static readonly int GroundedId = Animator.StringToHash("grounded");
+        private static readonly int JumpId = Animator.StringToHash("jump");
+        private static readonly int RunningId = Animator.StringToHash("running");
+        private static readonly int LandId = Animator.StringToHash("land");
 
         /**
          * True whenever the player is on the ground.
@@ -61,6 +71,8 @@ namespace Characters
             body.gravityScale = 0;
 
             body.sharedMaterial = lowFriction;
+
+            animator = GetComponentInChildren<Animator>();
         }
 
         public void Jump()
@@ -69,6 +81,9 @@ namespace Characters
 
             body.velocity = new Vector2(body.velocity.x, jumpSpeed);
             jumpCooldown = JumpDelay;
+
+            animator?.ResetTrigger(LandId);
+            animator?.SetTrigger(JumpId);
         }
 
         public void MoveRight()
@@ -77,6 +92,10 @@ namespace Characters
 
             // remove friction when moving
             body.sharedMaterial = lowFriction;
+
+            animator?.SetBool(RunningId, true);
+            if (sprite)
+                sprite.transform.localScale = new Vector2(1, 1);
         }
 
         public void MoveLeft()
@@ -85,11 +104,16 @@ namespace Characters
 
             // remove friction when moving
             body.sharedMaterial = lowFriction;
+
+            animator?.SetBool(RunningId, true);
+            if (sprite)
+                sprite.transform.localScale = new Vector2(-1, 1);
         }
 
         public void StopMoving()
         {
             direction = Direction.Idle;
+            animator?.SetBool(RunningId, false);
         }
 
         public void Hurt(GameObject source, float damage)
@@ -138,6 +162,9 @@ namespace Characters
             body.AddForce(gravity * (gravityScale * body.mass));
             body.velocity = Vector2.SmoothDamp(body.velocity, targetVelocity, ref velocity, MoveSmoothing);
 
+            if (sprite)
+                sprite.transform.localRotation = Quaternion.FromToRotation(Vector2.down, groundNormal);
+
             // draw gravity and velocity vectors
             Debug.DrawRay(body.position, gravity, Color.white);
             Debug.DrawRay(body.position, targetVelocity, Color.grey);
@@ -151,10 +178,17 @@ namespace Characters
             // check if colliding with ground
             CheckGround(collision);
 
-            // increase friction when landing without moving
-            // prevents sliding on slope when landing
-            if (!wasGrounded && Grounded && direction == Direction.Idle)
-                body.sharedMaterial = highFriction;
+            // if landing
+            if (!wasGrounded && Grounded)
+            {
+                animator?.ResetTrigger(JumpId);
+                animator?.SetTrigger(LandId);
+
+                // increase friction when landing without moving
+                // prevents sliding on slope when landing
+                if (direction == Direction.Idle)
+                    body.sharedMaterial = highFriction;
+            }
         }
 
         private void OnCollisionStay2D(Collision2D collision)
@@ -175,6 +209,7 @@ namespace Characters
             {
                 ground = null;
                 groundNormal = Vector2.zero;
+                animator?.SetBool(GroundedId, false);
             }
         }
 
@@ -204,6 +239,8 @@ namespace Characters
                 else
                     Debug.DrawRay(contact.point, contact.normal, Color.red);
             }
+
+            animator?.SetBool(GroundedId, Grounded);
         }
     }
 }
