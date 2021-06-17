@@ -20,14 +20,15 @@ namespace Characters
         {
             var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
             if (playerDistance > 20 || playerDistance < 4)
-                character.StopMoving(); 
+                character.StopMoving();
             else if (player.transform.position.x < transform.position.x)
                 character.MoveLeft();
 
             else
                 character.MoveRight();
 
-            if ((player.transform.position.x < transform.position.x && facingLeft == false) || (player.transform.position.x > transform.position.x && facingLeft == true))
+            if ((player.transform.position.x < transform.position.x && facingLeft == false) ||
+                (player.transform.position.x > transform.position.x && facingLeft == true))
                 transform.Rotate(0f, 180f, 0f);
         }
 
@@ -35,7 +36,7 @@ namespace Characters
         {
             // if enemy killed
             if (character.Health <= 0)
-                Destroy(gameObject);
+                Destroy(gameObject, 0.5f);
         }
     }
 }

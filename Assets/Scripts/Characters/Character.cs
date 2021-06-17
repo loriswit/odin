@@ -30,6 +30,9 @@ namespace Characters
         [SerializeField]
         private GameObject sprite;
 
+        private SpriteRenderer[] renderers = new SpriteRenderer[0];
+        private Color defaultColor;
+
         private Rigidbody2D body;
 
         private float gravityScale;
@@ -80,6 +83,9 @@ namespace Characters
             body.sharedMaterial = lowFriction;
 
             animator = GetComponentInChildren<Animator>();
+            renderers = GetComponentsInChildren<SpriteRenderer>();
+            if (renderers.Length > 0)
+                defaultColor = renderers[0].color;
         }
 
         public void Jump()
@@ -134,11 +140,21 @@ namespace Characters
             var hitDirection = (transform.position - source.transform.position).normalized;
             body.velocity = hitDirection * 20 + new Vector3(0, Grounded ? 10 : 2, 0);
 
+            // animate and set color
             animator?.SetTrigger(health > 0 ? HurtId : DieId);
+
+            if (health > 0 || !sprite)
+                foreach (var s in renderers)
+                    s.color = new Color(1, 0.5f, 0.5f);
         }
 
         private void FixedUpdate()
         {
+            // clear color
+            if (hurtCooldown - Time.fixedDeltaTime <= 0)
+                foreach (var s in renderers)
+                    s.color = defaultColor;
+
             // decrease cooldowns
             jumpCooldown -= Time.fixedDeltaTime;
             hurtCooldown -= Time.fixedDeltaTime;
