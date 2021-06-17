@@ -9,7 +9,8 @@ namespace Characters
         public GameObject projectilePrefab;
         public float coolDown = 3f;
 
-        void FixedUpdate() {
+        void FixedUpdate()
+        {
             Player player = FindObjectOfType<Player>();
             var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
             coolDown -= Time.fixedDeltaTime;
