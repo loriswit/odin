@@ -26,5 +26,12 @@ namespace Characters
             else
                 character.MoveRight();
         }
+
+        private void Update()
+        {
+            // if enemy killed
+            if (character.Health <= 0)
+                Destroy(gameObject);
+        }
     }
 }

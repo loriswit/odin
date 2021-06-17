@@ -131,10 +131,6 @@ namespace Characters
             // make the character bump
             var hitDirection = (transform.position - source.transform.position).normalized;
             body.velocity = hitDirection * 10 + new Vector3(0, 10, 0);
-
-            // kill the character
-            if (health < 0)
-                Destroy(gameObject);
         }
 
         private void FixedUpdate()
