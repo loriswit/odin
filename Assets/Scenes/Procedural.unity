@@ -826,7 +826,7 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b0cb989fd301b404d8875b0f15f084dd, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
-  length: 40
+  length: 5
   start: {fileID: 53491690}
   chunks:
   - {fileID: 638080998569315186, guid: e3d667618cafebb47a25aae2870cd3da, type: 3}
