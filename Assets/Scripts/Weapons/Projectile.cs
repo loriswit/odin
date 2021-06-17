@@ -18,12 +18,15 @@ namespace Characters
             if (hitInfo.isTrigger) return;
 
             var player = hitInfo.GetComponent<Player>();
-            if (player != null)
+            if (hitInfo.GetComponent<Player>())
             {
                 player.GetComponentInParent<Character>().Hurt(gameObject, damage);
+                Destroy(gameObject);
             }
 
-            Destroy(gameObject);
+            // go through other characters
+            else if (!hitInfo.GetComponent<Character>())
+                Destroy(gameObject);
         }
     }
 }

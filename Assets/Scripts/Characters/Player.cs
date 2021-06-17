@@ -18,6 +18,9 @@ namespace Characters
         private Animator animator;
         private static readonly int Attack = Animator.StringToHash("attack");
 
+        private float attackCooldown;
+        private const float AttackDelay = 0.5f;
+
         private bool dead;
 
         private void Awake()
@@ -28,6 +31,8 @@ namespace Characters
 
         private void Update()
         {
+            attackCooldown -= Time.deltaTime;
+
             if (!dead && character.Health <= 0)
             {
                 dead = true;
@@ -37,14 +42,16 @@ namespace Characters
 
         private void OnJump()
         {
-            if (!dead)
+            if (!dead && !character.ReceivingDamage)
                 character.Jump();
         }
 
         private void OnAttack()
         {
-            if (dead) return;
+            if (dead || character.ReceivingDamage || attackCooldown > 0)
+                return;
 
+            attackCooldown = AttackDelay;
             animator.SetTrigger(Attack);
 
             var filter = new ContactFilter2D

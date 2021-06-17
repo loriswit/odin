@@ -6,6 +6,9 @@ namespace Characters
 {
     public class AntiPlayer : MonoBehaviour
     {
+        [SerializeField]
+        private bool isStatic;
+
         [Header("Weapon")]
         [SerializeField]
         private Collider2D hitbox;
@@ -52,35 +55,45 @@ namespace Characters
             attackCooldown -= Time.fixedDeltaTime;
             jumpCooldown -= Time.fixedDeltaTime;
 
-            // movements
-            var playerDistanceX = Math.Abs(transform.position.x - player.transform.position.x);
-            if (playerDistanceX > 15 || playerDistanceX < 2)
+            if (character.ReceivingDamage)
             {
-                character.StopMoving();
-                jumpCooldown = JumpDelay / 2;
-            }
-            else if (player.transform.position.x < transform.position.x)
-            {
-                character.MoveLeft();
-                hitbox.transform.localScale = new Vector2(-1, 1);
-            }
-            else
-            {
-                character.MoveRight();
-                hitbox.transform.localScale = new Vector2(1, 1);
+                // start moving once hit
+                isStatic = false;
+                return;
             }
 
-            // jumps
-            var playerDistanceY = player.transform.position.y - transform.position.y;
-            if (jumpCooldown <= 0 && playerDistanceY > 1.5)
+            // movements
+            if (!isStatic)
             {
-                jumpCooldown = JumpDelay;
-                character.Jump();
+                var playerDistanceX = Math.Abs(transform.position.x - player.transform.position.x);
+                if (playerDistanceX > 15 || playerDistanceX < 2)
+                {
+                    character.StopMoving();
+                    jumpCooldown = JumpDelay / 2;
+                }
+                else if (player.transform.position.x < transform.position.x)
+                {
+                    character.MoveLeft();
+                    hitbox.transform.localScale = new Vector2(-1, 1);
+                }
+                else
+                {
+                    character.MoveRight();
+                    hitbox.transform.localScale = new Vector2(1, 1);
+                }
+
+                // jumps
+                var playerDistanceY = player.transform.position.y - transform.position.y;
+                if (jumpCooldown <= 0 && playerDistanceY > 1.5)
+                {
+                    jumpCooldown = JumpDelay;
+                    character.Jump();
+                }
             }
 
             // attack
             var playerDistance = Vector2.Distance(player.transform.position, transform.position);
-            if (playerDistance <= 3 && attackCooldown <= 0)
+            if (playerDistance <= 2.5 && attackCooldown <= 0)
             {
                 attackCooldown = AttackDelay;
                 animator.SetTrigger(Attack);

@@ -5,6 +5,9 @@ namespace Characters
 {
     public class Enemy : MonoBehaviour
     {
+        [SerializeField]
+        private bool isStatic;
+
         private Player player;
         private Character character;
 
@@ -18,14 +21,18 @@ namespace Characters
 
         private void FixedUpdate()
         {
-            var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
-            if (playerDistance > 20 || playerDistance < 4)
-                character.StopMoving();
-            else if (player.transform.position.x < transform.position.x)
-                character.MoveLeft();
+            if (character.ReceivingDamage) return;
 
-            else
-                character.MoveRight();
+            if (!isStatic)
+            {
+                var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
+                if (playerDistance > 10 || playerDistance < 4)
+                    character.StopMoving();
+                else if (player.transform.position.x < transform.position.x)
+                    character.MoveLeft();
+                else
+                    character.MoveRight();
+            }
 
             if ((player.transform.position.x < transform.position.x && facingLeft == false) ||
                 (player.transform.position.x > transform.position.x && facingLeft == true))

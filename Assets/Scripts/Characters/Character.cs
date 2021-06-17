@@ -72,6 +72,11 @@ namespace Characters
          */
         public float Health => health;
 
+        /**
+         * True when the character has just received damage.
+         */
+        public bool ReceivingDamage => hurtCooldown > 0;
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();

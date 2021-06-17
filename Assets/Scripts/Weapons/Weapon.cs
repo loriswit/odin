@@ -14,7 +14,7 @@ namespace Characters
             Player player = FindObjectOfType<Player>();
             var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
             coolDown -= Time.fixedDeltaTime;
-            if (coolDown > 0 || playerDistance > 20) return;
+            if (coolDown > 0 || playerDistance > 10) return;
 
             Shoot();
             coolDown = 3f;
