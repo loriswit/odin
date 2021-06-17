@@ -1,23 +1,27 @@
-using System.Collections;
-using System.Collections.Generic;
+using System;
 using UnityEngine;
 
-public class Weapon : MonoBehaviour
+namespace Characters
 {
-    public Transform firePoint;
-    public GameObject projectilePrefab;
-    public float coolDown = 1.5f;
-    void FixedUpdate()
+    public class Weapon : MonoBehaviour
     {
-        coolDown -= Time.fixedDeltaTime;
-        if (coolDown > 0) return;
-        
-        Shoot();
-        coolDown = 1.5f;
-    }
+        public Transform firePoint;
+        public GameObject projectilePrefab;
+        public float coolDown = 3f;
 
-    void Shoot()
-    {
-        Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        void FixedUpdate() {
+            Player player = FindObjectOfType<Player>();
+            var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
+            coolDown -= Time.fixedDeltaTime;
+            if (coolDown > 0 || playerDistance > 20) return;
+
+            Shoot();
+            coolDown = 3f;
+        }
+
+        void Shoot()
+        {
+            Instantiate(projectilePrefab, firePoint.position, firePoint.rotation);
+        }
     }
 }

@@ -8,6 +8,8 @@ namespace Characters
         private Player player;
         private Character character;
 
+        private bool facingLeft = true;
+
         private void Awake()
         {
             character = GetComponent<Character>();
@@ -17,14 +19,16 @@ namespace Characters
         private void FixedUpdate()
         {
             var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
-            if (playerDistance > 20 || playerDistance < 1.5)
-                character.StopMoving();
-
+            if (playerDistance > 20 || playerDistance < 4)
+                character.StopMoving(); 
             else if (player.transform.position.x < transform.position.x)
                 character.MoveLeft();
 
             else
                 character.MoveRight();
+
+            if ((player.transform.position.x < transform.position.x && facingLeft == false) || (player.transform.position.x > transform.position.x && facingLeft == true))
+                transform.Rotate(0f, 180f, 0f);
         }
 
         private void Update()
