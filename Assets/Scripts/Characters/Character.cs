@@ -62,6 +62,11 @@ namespace Characters
          */
         private bool MidAir => !Grounded || jumpCooldown > 0;
 
+        /**
+         * Return the current health points.
+         */
+        public float Health => health;
+
         private void Awake()
         {
             body = GetComponent<Rigidbody2D>();
