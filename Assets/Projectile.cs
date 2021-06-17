@@ -1,5 +1,3 @@
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Characters
@@ -17,7 +15,9 @@ namespace Characters
 
         void OnTriggerEnter2D(Collider2D hitInfo)
         {
-            Player player = hitInfo.GetComponent<Player>();
+            if (hitInfo.isTrigger) return;
+
+            var player = hitInfo.GetComponent<Player>();
             if (player != null)
             {
                 player.GetComponentInParent<Character>().Hurt(gameObject, damage);
@@ -27,4 +27,3 @@ namespace Characters
         }
     }
 }
-
