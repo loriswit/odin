@@ -50,6 +50,8 @@ namespace Characters
         private static readonly int JumpId = Animator.StringToHash("jump");
         private static readonly int RunningId = Animator.StringToHash("running");
         private static readonly int LandId = Animator.StringToHash("land");
+        private static readonly int HurtId = Animator.StringToHash("hurt");
+        private static readonly int DieId = Animator.StringToHash("die");
 
         /**
          * True whenever the player is on the ground.
@@ -123,14 +125,16 @@ namespace Characters
 
         public void Hurt(GameObject source, float damage)
         {
-            if (hurtCooldown > 0) return;
+            if (hurtCooldown > 0 || health <= 0) return;
 
             health -= damage;
             hurtCooldown = HurtDelay;
 
             // make the character bump
             var hitDirection = (transform.position - source.transform.position).normalized;
-            body.velocity = hitDirection * 10 + new Vector3(0, 10, 0);
+            body.velocity = hitDirection * 20 + new Vector3(0, Grounded ? 10 : 2, 0);
+
+            animator?.SetTrigger(health > 0 ? HurtId : DieId);
         }
 
         private void FixedUpdate()

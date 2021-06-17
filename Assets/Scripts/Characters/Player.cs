@@ -18,19 +18,33 @@ namespace Characters
         private Animator animator;
         private static readonly int Attack = Animator.StringToHash("attack");
 
+        private bool dead;
+
         private void Awake()
         {
             character = GetComponent<Character>();
             animator = GetComponentInChildren<Animator>();
         }
 
+        private void Update()
+        {
+            if (!dead && character.Health <= 0)
+            {
+                dead = true;
+                character.StopMoving();
+            }
+        }
+
         private void OnJump()
         {
-            character.Jump();
+            if (!dead)
+                character.Jump();
         }
 
         private void OnAttack()
         {
+            if (dead) return;
+
             animator.SetTrigger(Attack);
 
             var filter = new ContactFilter2D
@@ -49,6 +63,8 @@ namespace Characters
 
         private void OnMove(InputValue value)
         {
+            if (dead) return;
+
             var input = value.Get<float>();
 
             if (input > 0)
