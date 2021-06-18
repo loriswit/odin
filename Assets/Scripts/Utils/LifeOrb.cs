@@ -17,8 +17,9 @@ namespace Characters
             var player = hitInfo.GetComponent<Player>();
             if (hitInfo.GetComponent<Player>())
             {
-                player.GetComponentInParent<Character>().Heal(heal);
-                Destroy(gameObject);
+                bool isHealed = player.GetComponentInParent<Character>().Heal(heal);
+                if (isHealed) 
+                    Destroy(gameObject);
             }
         }
     }

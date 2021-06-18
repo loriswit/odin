@@ -154,12 +154,15 @@ namespace Characters
                     s.color = new Color(1, 0.5f, 0.5f);
         }
 
-		public void Heal(float heal){
+		public bool Heal(float heal){
+			if(health == maxHealth) 
+				return false;
 			if(health + heal > maxHealth){
 				health = maxHealth;
 			} else {
 				health += heal;
 			}
+			return true;
 		}
 
         private void FixedUpdate()
