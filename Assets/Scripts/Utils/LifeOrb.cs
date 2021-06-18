@@ -1,13 +1,10 @@
-using System.Collections;
-using System.Collections.Generic;
+using Characters;
 using UnityEngine;
 
-namespace Characters
+namespace Utils
 {
     public class LifeOrb : MonoBehaviour
     {
-        public Rigidbody2D rb;
-
         public float heal = 20f;
 
         void OnTriggerEnter2D(Collider2D hitInfo)
@@ -18,7 +15,7 @@ namespace Characters
             if (hitInfo.GetComponent<Player>())
             {
                 bool isHealed = player.GetComponentInParent<Character>().Heal(heal);
-                if (isHealed) 
+                if (isHealed)
                     Destroy(gameObject);
             }
         }

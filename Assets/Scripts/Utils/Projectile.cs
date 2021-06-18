@@ -1,6 +1,7 @@
+using Characters;
 using UnityEngine;
 
-namespace Characters
+namespace Utils
 {
     public class Projectile : MonoBehaviour
     {

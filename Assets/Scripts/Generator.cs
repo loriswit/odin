@@ -10,8 +10,18 @@ public class Generator : MonoBehaviour
     [SerializeField]
     private Chunk start;
 
+    [Header("Chunks")]
     [SerializeField]
-    private List<Chunk> chunks;
+    private List<Chunk> easy;
+
+    [SerializeField]
+    private List<Chunk> medium;
+
+    [SerializeField]
+    private List<Chunk> hard;
+
+    [SerializeField]
+    private List<Chunk> rest;
 
     private Player player;
     private Chunk lastChunk;
@@ -40,7 +50,7 @@ public class Generator : MonoBehaviour
 
     private void AppendRandomChunk()
     {
-        var chunk = chunks[Random.Range(0, chunks.Count)];
+        var chunk = easy[Random.Range(0, easy.Count)];
         lastChunk = Instantiate(chunk, lastChunk.Exit.position - chunk.Entry.position, Quaternion.identity);
         checkpoints.Enqueue(lastChunk.Entry.position.x);
     }

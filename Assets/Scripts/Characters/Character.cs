@@ -13,7 +13,8 @@ namespace Characters
 
         [SerializeField]
         private float health = 100;
-		private float maxHealth = 100;
+
+        private float maxHealth;
 
         [Header("Ground Detection")]
         [Range(0f, 90f)]
@@ -92,6 +93,8 @@ namespace Characters
             renderers = GetComponentsInChildren<SpriteRenderer>();
             if (renderers.Length > 0)
                 defaultColor = renderers[0].color;
+
+            maxHealth = health;
         }
 
         public void Jump()
@@ -154,16 +157,21 @@ namespace Characters
                     s.color = new Color(1, 0.5f, 0.5f);
         }
 
-		public bool Heal(float heal){
-			if(health == maxHealth) 
-				return false;
-			if(health + heal > maxHealth){
-				health = maxHealth;
-			} else {
-				health += heal;
-			}
-			return true;
-		}
+        public bool Heal(float heal)
+        {
+            if (health == maxHealth)
+                return false;
+            if (health + heal > maxHealth)
+            {
+                health = maxHealth;
+            }
+            else
+            {
+                health += heal;
+            }
+
+            return true;
+        }
 
         private void FixedUpdate()
         {
