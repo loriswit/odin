@@ -202,7 +202,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpSpeed: 12
   moveSpeed: 5
-  health: 100
+  health: 75
   maxGroundAngle: 45
   lowFriction: {fileID: 6200000, guid: e82b7ee4c5e6e5c4099eeba33c66b361, type: 2}
   highFriction: {fileID: 6200000, guid: 342ce35e0f448f349b1b153d634b62ff, type: 2}
@@ -237,7 +237,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   firePoint: {fileID: 1472906448212700697}
   projectilePrefab: {fileID: 3029135530864345975, guid: 0578be8e25fbdee429480a51ffecc5e2, type: 3}
-  coolDown: 1
+  shootRate: 2
 --- !u!1 &4882895204561311718
 GameObject:
   m_ObjectHideFlags: 0

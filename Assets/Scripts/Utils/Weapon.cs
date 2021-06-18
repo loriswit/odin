@@ -8,17 +8,28 @@ namespace Utils
     {
         public Transform firePoint;
         public GameObject projectilePrefab;
-        public float coolDown = 3f;
+        public float shootRate = 3;
+
+        private float coolDown;
+        private Character character;
+
+        private void Awake()
+        {
+            coolDown = shootRate / 3;
+            character = GetComponent<Character>();
+        }
 
         void FixedUpdate()
         {
-            Player player = FindObjectOfType<Player>();
+            var player = FindObjectOfType<Player>();
             var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
             coolDown -= Time.fixedDeltaTime;
-            if (coolDown > 0 || playerDistance > 10) return;
+
+            if (coolDown > 0 || playerDistance > 7 || character.ReceivingDamage || character.Health <= 0)
+                return;
 
             Shoot();
-            coolDown = 3f;
+            coolDown = shootRate;
         }
 
         void Shoot()

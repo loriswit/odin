@@ -66,7 +66,7 @@ namespace Characters
             if (!isStatic)
             {
                 var playerDistanceX = Math.Abs(transform.position.x - player.transform.position.x);
-                if (playerDistanceX > 15 || playerDistanceX < 2)
+                if (playerDistanceX > 10 || playerDistanceX < 2)
                 {
                     character.StopMoving();
                     jumpCooldown = JumpDelay / 2;

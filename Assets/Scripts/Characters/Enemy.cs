@@ -26,7 +26,7 @@ namespace Characters
             if (!isStatic)
             {
                 var playerDistance = Math.Abs(transform.position.x - player.transform.position.x);
-                if (playerDistance > 10 || playerDistance < 4)
+                if (playerDistance > 8 || playerDistance < 4)
                     character.StopMoving();
                 else if (player.transform.position.x < transform.position.x)
                     character.MoveLeft();
@@ -34,11 +34,12 @@ namespace Characters
                     character.MoveRight();
             }
 
-            if ((player.transform.position.x < transform.position.x && facingLeft == false) ||
-                (player.transform.position.x > transform.position.x && facingLeft == true)) {
-                	transform.Rotate(0f, 180f, 0f);
-					facingLeft = !facingLeft;	
-				}
+            if (player.transform.position.x < transform.position.x && facingLeft == false ||
+                player.transform.position.x > transform.position.x && facingLeft)
+            {
+                transform.Rotate(0f, 180f, 0f);
+                facingLeft = !facingLeft;
+            }
         }
 
         private void Update()

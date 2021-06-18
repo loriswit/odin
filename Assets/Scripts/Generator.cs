@@ -1,6 +1,8 @@
+using System;
 using System.Collections.Generic;
 using Characters;
 using UnityEngine;
+using Random = UnityEngine.Random;
 
 public class Generator : MonoBehaviour
 {
@@ -27,6 +29,10 @@ public class Generator : MonoBehaviour
     private Chunk lastChunk;
     private readonly Queue<float> checkpoints = new Queue<float>();
 
+    private int index;
+    private int lastHard;
+    private string lastChunkName;
+
     private void Awake()
     {
         player = FindObjectOfType<Player>();
@@ -50,8 +56,51 @@ public class Generator : MonoBehaviour
 
     private void AppendRandomChunk()
     {
-        var chunk = easy[Random.Range(0, easy.Count)];
+        // algorithm that finds the best next chunk
+        Chunk chunk;
+        do
+        {
+            // always start with easy chunks
+            if (index < 2)
+                chunk = easy[Random.Range(0, easy.Count)];
+
+            // easy-medium chunks
+            else if (index - lastHard < 5)
+            {
+                if (Random.Range(0f, 1f) < 0.65)
+                    // less rest as we progress
+                    if (Random.Range(0f, 1f) > Math.Max(0.2, 0.5 - (float) index / 150))
+                        chunk = easy[Random.Range(0, easy.Count)];
+                    else
+                        chunk = rest[Random.Range(0, rest.Count)];
+                else
+                    chunk = medium[Random.Range(0, medium.Count)];
+            }
+
+            // if we haven't got a hard chunk in a while
+            else
+            {
+                var p = Random.Range(0f, 1f);
+                if (p < 0.3)
+                    // less rest as we progress
+                    if (Random.Range(0f, 1f) > Math.Max(0.2, 0.3 - (float) index / 150))
+                        chunk = easy[Random.Range(0, easy.Count)];
+                    else
+                        chunk = rest[Random.Range(0, rest.Count)];
+                else if (p >= 0.3 && p < 0.6)
+                    chunk = medium[Random.Range(0, medium.Count)];
+                else
+                {
+                    chunk = hard[Random.Range(0, hard.Count)];
+                    lastHard = index;
+                }
+            }
+        } while (chunk.name == lastChunkName); // prevent getting the same chunk twice in a row
+
+        index++;
+
         lastChunk = Instantiate(chunk, lastChunk.Exit.position - chunk.Entry.position, Quaternion.identity);
+        lastChunkName = chunk.name;
         checkpoints.Enqueue(lastChunk.Entry.position.x);
     }
 }

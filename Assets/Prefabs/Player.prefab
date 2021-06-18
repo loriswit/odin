@@ -492,7 +492,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   jumpSpeed: 12
   moveSpeed: 6
-  health: 100
+  health: 150
   maxGroundAngle: 45
   lowFriction: {fileID: 6200000, guid: e82b7ee4c5e6e5c4099eeba33c66b361, type: 2}
   highFriction: {fileID: 6200000, guid: 342ce35e0f448f349b1b153d634b62ff, type: 2}
