@@ -10,9 +10,8 @@ namespace Characters
 
         public float heal = 20f;
 
-        void onTriggerEnter2D(Collider2D hitInfo)
+        void OnTriggerEnter2D(Collider2D hitInfo)
         {
-            Debug.Log("test");
             if (hitInfo.isTrigger) return;
 
             var player = hitInfo.GetComponent<Player>();
