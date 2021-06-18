@@ -13,6 +13,7 @@ namespace Characters
 
         [SerializeField]
         private float health = 100;
+		private float maxHealth = 100;
 
         [Header("Ground Detection")]
         [Range(0f, 90f)]
@@ -152,6 +153,14 @@ namespace Characters
                 foreach (var s in renderers)
                     s.color = new Color(1, 0.5f, 0.5f);
         }
+
+		public void Heal(float heal){
+			if(health + heal > maxHealth){
+				health = maxHealth;
+			} else {
+				health += heal;
+			}
+		}
 
         private void FixedUpdate()
         {
