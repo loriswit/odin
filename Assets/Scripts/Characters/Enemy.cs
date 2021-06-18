@@ -35,8 +35,10 @@ namespace Characters
             }
 
             if ((player.transform.position.x < transform.position.x && facingLeft == false) ||
-                (player.transform.position.x > transform.position.x && facingLeft == true))
-                transform.Rotate(0f, 180f, 0f);
+                (player.transform.position.x > transform.position.x && facingLeft == true)) {
+                	transform.Rotate(0f, 180f, 0f);
+					facingLeft = !facingLeft;	
+				}
         }
 
         private void Update()
